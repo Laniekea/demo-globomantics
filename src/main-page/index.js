@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import logo from './logo.jpg';
 import './main-page.css';
 import Header from './header';
+import FeaturedHouse from './featured-house';
+import HouseFilter from './house-filter';
 
 class App extends Component {
   // construtor take props as parameter
@@ -51,6 +53,7 @@ class App extends Component {
     return (
       <div className="container">
         <Header subtitle="Home Sweet Home"/>
+        <FeaturedHouse house={this.state.featuredHouse}/>
       </div>
     );
   }
