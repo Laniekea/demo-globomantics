@@ -1,9 +1,7 @@
 import React, {Component} from 'react';
-import logo from './logo.jpg';
 import './main-page.css';
-import Header from './header';
-import FeaturedHouse from './featured-house';
-import HouseFilter from './house-filter';
+import AppPresentation from './app-presentation';
+
 
 class App extends Component {
   // construtor take props as parameter
@@ -36,12 +34,34 @@ class App extends Component {
     }
   }
 
+  determineUniqueCountries = () => {
+    const countries = this.allHouses? Array.from(new Set(this.allHouses.map(h => h.country))): [];
+    countries.unshift(null);
+    this.setState({ countries });
+
+  }
+
+  filterHouses = (country) => {
+    this.setState({ activeHouse: null });
+    const filteredHouses = this.allHouses.filter((h) => h.country === country);
+    this.setState({ filteredHouses });
+    this.setState({ country });
+  }
+  
+  setActiveHouse = (house) => {
+    this.setState({ activeHouse: house});
+  }
+
   fetchHouses = () => {
-    fetch('../houses.json').then(rsp => rsp.json()).then(allHouses => { 
+    fetch('../houses.json')
+    .then(rsp => rsp.json())
+    .then(allHouses => { 
       this.allHouses = allHouses; 
       this.determineFeaturedHouse();
+      this.determineUniqueCountries();
     })
   }
+
 
   render() {
     // re-render if error occurs
@@ -51,11 +71,18 @@ class App extends Component {
     
     // render normal UI if no error is found
     return (
-      <div className="container">
-        <Header subtitle="Home Sweet Home"/>
-        <FeaturedHouse house={this.state.featuredHouse}/>
-      </div>
-    );
+      <AppPresentation 
+        country={this.state.country} 
+        filteredHouses={this.state.filteredHouses}
+        featuredHouse={this.state.featuredHouse}
+        countries={this.state.countries}
+        filterHouses={this.filterHouses}
+        activeHouse={this.state.activeHouse}
+        setActiveHouse={this.setActiveHouse}
+      />
+
+    )
+    
   }
 }
 
